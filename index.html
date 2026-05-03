@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GIF表情生成器 - Solo Coder</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gradient-to-br from-purple-100 to-blue-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- 标题区域 -->
+        <header class="text-center mb-10">
+            <h1 class="text-4xl font-bold text-purple-800 mb-2">🎨 GIF表情生成器</h1>
+            <p class="text-gray-600">自定义你的专属表情，生成动态GIF</p>
+        </header>
+
+        <div class="flex flex-col lg:flex-row gap-8">
+            <!-- 左侧：组件选择区 -->
+            <div class="lg:w-2/3">
+                <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+                    <h2 class="text-2xl font-semibold text-purple-700 mb-4 border-b pb-2">👤 自定义形象</h2>
+                    
+                    <!-- 组件选择标签页 -->
+                    <div class="flex flex-wrap gap-2 mb-6">
+                        <button class="component-tab active px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition" data-component="face">脸型</button>
+                        <button class="component-tab px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition" data-component="eyes">眼睛</button>
+                        <button class="component-tab px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition" data-component="nose">鼻子</button>
+                        <button class="component-tab px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition" data-component="mouth">嘴巴</button>
+                        <button class="component-tab px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition" data-component="glasses">眼镜</button>
+                        <button class="component-tab px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition" data-component="accessories">配饰</button>
+                    </div>
+
+                    <!-- 组件选项区域 -->
+                    <div id="component-options" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-4">
+                        <!-- 组件选项将通过JavaScript动态生成 -->
+                    </div>
+                </div>
+
+                <!-- 情绪设置区 -->
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h2 class="text-2xl font-semibold text-purple-700 mb-4 border-b pb-2">😊 情绪设置</h2>
+                    
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                        <button class="emotion-btn active p-4 bg-purple-100 border-2 border-purple-500 rounded-lg text-center transition hover:bg-purple-200" data-emotion="neutral">
+                            <div class="text-2xl mb-1">😐</div>
+                            <div class="text-sm font-medium">普通</div>
+                        </button>
+                        <button class="emotion-btn p-4 bg-gray-100 border-2 border-gray-200 rounded-lg text-center transition hover:bg-gray-200" data-emotion="happy">
+                            <div class="text-2xl mb-1">😊</div>
+                            <div class="text-sm font-medium">微笑</div>
+                        </button>
+                        <button class="emotion-btn p-4 bg-gray-100 border-2 border-gray-200 rounded-lg text-center transition hover:bg-gray-200" data-emotion="angry">
+                            <div class="text-2xl mb-1">😠</div>
+                            <div class="text-sm font-medium">生气</div>
+                        </button>
+                        <button class="emotion-btn p-4 bg-gray-100 border-2 border-gray-200 rounded-lg text-center transition hover:bg-gray-200" data-emotion="sad">
+                            <div class="text-2xl mb-1">😢</div>
+                            <div class="text-sm font-medium">悲伤</div>
+                        </button>
+                        <button class="emotion-btn p-4 bg-gray-100 border-2 border-gray-200 rounded-lg text-center transition hover:bg-gray-200" data-emotion="stars">
+                            <div class="text-2xl mb-1">🤩</div>
+                            <div class="text-sm font-medium">星星眼</div>
+                        </button>
+                        <button class="emotion-btn p-4 bg-gray-100 border-2 border-gray-200 rounded-lg text-center transition hover:bg-gray-200" data-emotion="wink">
+                            <div class="text-2xl mb-1">😉</div>
+                            <div class="text-sm font-medium">眨眼</div>
+                        </button>
+                        <button class="emotion-btn p-4 bg-gray-100 border-2 border-gray-200 rounded-lg text-center transition hover:bg-gray-200" data-emotion="laugh">
+                            <div class="text-2xl mb-1">😂</div>
+                            <div class="text-sm font-medium">大笑</div>
+                        </button>
+                        <button class="emotion-btn p-4 bg-gray-100 border-2 border-gray-200 rounded-lg text-center transition hover:bg-gray-200" data-emotion="shock">
+                            <div class="text-2xl mb-1">😲</div>
+                            <div class="text-sm font-medium">惊讶</div>
+                        </button>
+                    </div>
+
+                    <!-- 动画速度调整 -->
+                    <div class="mt-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">动画速度</label>
+                        <input type="range" id="speed-slider" min="50" max="300" value="150" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                        <div class="flex justify-between text-xs text-gray-500 mt-1">
+                            <span>快</span>
+                            <span>正常</span>
+                            <span>慢</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 右侧：预览和操作区 -->
+            <div class="lg:w-1/3">
+                <div class="bg-white rounded-xl shadow-lg p-6 mb-6 sticky top-8">
+                    <h2 class="text-2xl font-semibold text-purple-700 mb-4 border-b pb-2">👁️ 预览</h2>
+                    
+                    <!-- 预览区域 -->
+                    <div class="flex justify-center mb-6">
+                        <div id="emoji-preview" class="w-64 h-64 bg-gray-100 rounded-lg flex items-center justify-center border-2 border-dashed border-gray-300">
+                            <div class="text-gray-400 text-center">
+                                <div class="text-4xl mb-2">🎭</div>
+                                <div>选择组件开始创建</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 操作按钮 -->
+                    <div class="space-y-3">
+                        <button id="play-animation" class="w-full py-3 bg-purple-600 text-white font-medium rounded-lg hover:bg-purple-700 transition flex items-center justify-center">
+                            <span class="mr-2">▶️</span> 播放动画
+                        </button>
+                        <button id="randomize" class="w-full py-3 bg-blue-500 text-white font-medium rounded-lg hover:bg-blue-600 transition flex items-center justify-center">
+                            <span class="mr-2">🎲</span> 随机生成
+                        </button>
+                        <button id="generate-gif" class="w-full py-3 bg-green-500 text-white font-medium rounded-lg hover:bg-green-600 transition flex items-center justify-center">
+                            <span class="mr-2">💾</span> 生成并下载GIF
+                        </button>
+                        <button id="reset" class="w-full py-3 bg-gray-500 text-white font-medium rounded-lg hover:bg-gray-600 transition flex items-center justify-center">
+                            <span class="mr-2">🔄</span> 重置
+                        </button>
+                    </div>
+
+                    <!-- 进度条 -->
+                    <div id="progress-container" class="mt-6 hidden">
+                        <div class="text-sm text-gray-600 mb-2">正在生成GIF...</div>
+                        <div class="w-full bg-gray-200 rounded-full h-2.5">
+                            <div id="progress-bar" class="bg-purple-600 h-2.5 rounded-full" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 页脚 -->
+        <footer class="text-center mt-12 text-gray-500 text-sm">
+            <p>© 2026 Solo Coder GIF表情生成器 | 让表达更有趣</p>
+        </footer>
+    </div>
+
+    <!-- 隐藏的Canvas用于GIF生成 -->
+    <canvas id="gif-canvas" width="256" height="256" style="display: none;"></canvas>
+
+    <!-- 引入脚本 -->
+    <script src="https://cdn.jsdelivr.net/npm/gif.js@0.2.0/dist/gif.min.js"></script>
+    <script src="components.js"></script>
+    <script src="animations.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

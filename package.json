@@ -1,0 +1,23 @@
+{
+  "name": "solo-gif-generator",
+  "version": "1.0.0",
+  "description": "GIF表情文件生成网站 - 支持自定义表情组件和情绪动画",
+  "main": "index.html",
+  "scripts": {
+    "dev": "python -m http.server 8080",
+    "start": "python -m http.server 8080"
+  },
+  "keywords": [
+    "gif",
+    "emoji",
+    "generator",
+    "表情",
+    "动画"
+  ],
+  "author": "solo_coder",
+  "license": "MIT",
+  "devDependencies": {},
+  "dependencies": {
+    "gif.js": "^0.2.0"
+  }
+}

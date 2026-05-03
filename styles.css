@@ -1,0 +1,214 @@
+/* 自定义样式 */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* 组件标签页样式 */
+.component-tab.active {
+    background-color: #8b5cf6;
+    color: white;
+}
+
+/* 组件选项样式 */
+.component-option {
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.component-option:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.component-option.selected {
+    border-color: #8b5cf6;
+    background-color: #ede9fe;
+}
+
+/* 表情预览样式 */
+#emoji-preview {
+    position: relative;
+    overflow: hidden;
+}
+
+.emoji-character {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+/* 动画效果 */
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+@keyframes sparkle {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.7; transform: scale(1.2); }
+}
+
+/* 情绪相关动画 */
+@keyframes eyeBlink {
+    0%, 100% { transform: scaleY(1); }
+    50% { transform: scaleY(0.1); }
+}
+
+@keyframes mouthHappy {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(5px); }
+}
+
+@keyframes tearsFlow {
+    0% { transform: translateY(0); opacity: 1; }
+    100% { transform: translateY(30px); opacity: 0; }
+}
+
+@keyframes eyesWiden {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+}
+
+/* 按钮禁用状态 */
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* 加载动画 */
+.loading-spinner {
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #8b5cf6;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    animation: spin 1s linear infinite;
+    display: inline-block;
+    margin-right: 8px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .container {
+        padding: 1rem;
+    }
+    
+    #emoji-preview {
+        width: 200px;
+        height: 200px;
+    }
+}
+
+/* 自定义滚动条 */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #a1a1a1;
+}
+
+/* 表情元素定位 */
+.face-element {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.eyes-element {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.nose-element {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.mouth-element {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.glasses-element {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.accessory-element {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+/* 情绪动画类 */
+.emotion-neutral {
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.emotion-happy {
+    animation: bounce 1s ease-in-out infinite;
+}
+
+.emotion-angry {
+    animation: shake 0.5s ease-in-out infinite;
+}
+
+.emotion-sad {
+    animation: pulse 3s ease-in-out infinite;
+}
+
+.emotion-stars {
+    animation: sparkle 1.5s ease-in-out infinite;
+}
+
+.emotion-wink {
+    animation: bounce 1.2s ease-in-out infinite;
+}
+
+.emotion-laugh {
+    animation: bounce 0.8s ease-in-out infinite;
+}
+
+.emotion-shock {
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* 进度条动画 */
+#progress-bar {
+    transition: width 0.3s ease;
+}
