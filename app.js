@@ -437,24 +437,12 @@ class GifEmojiApp {
             
             const frameDuration = Math.max(50, this.animationSpeed);
             
-            let gif;
-            try {
-                gif = new GIF({
-                    workers: 2,
-                    quality: 10,
-                    width: 256,
-                    height: 256,
-                    workerScript: 'https://cdn.jsdelivr.net/npm/gif.js@0.2.0/dist/gif.worker.js'
-                });
-            } catch (e) {
-                console.warn('使用CDN worker失败，尝试单线程模式:', e);
-                gif = new GIF({
-                    workers: 0,
-                    quality: 10,
-                    width: 256,
-                    height: 256
-                });
-            }
+            const gif = new GIF({
+                workers: 0,
+                quality: 10,
+                width: 256,
+                height: 256
+            });
             
             const size = 256;
             const centerX = size / 2;
