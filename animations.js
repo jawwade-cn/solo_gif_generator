@@ -194,63 +194,48 @@ function renderAnimationFrame(ctx, frameData, components, size, centerX, centerY
         components.face.draw(ctx, 0, 0, size);
     }
     
-    if (components.eyes) {
+    const eyeScale = frameData.eyeScale || 1;
+    const hasEyeTransform = eyeScale !== 1 || 
+        frameData.leftEyeScale !== undefined || 
+        frameData.rightEyeScale !== undefined;
+    
+    if (hasEyeTransform) {
         ctx.save();
-        const eyeScale = frameData.eyeScale || 1;
-        
+    }
+    
+    if (components.eyes) {
         if (frameData.leftEyeScale !== undefined || frameData.rightEyeScale !== undefined) {
-            const leftScale = frameData.leftEyeScale || eyeScale;
-            const rightScale = frameData.rightEyeScale || eyeScale;
-            const eyeSpacing = size * 0.25;
-            const eyeY = -size * 0.1;
-            const eyeSize = size * 0.08;
+            const leftScale = frameData.leftEyeScale || 1;
+            const rightScale = frameData.rightEyeScale || 1;
             
-            ctx.save();
-            ctx.translate(-eyeSpacing, eyeY);
-            ctx.scale(leftScale, leftScale);
-            ctx.translate(eyeSpacing, -eyeY);
-            
-            ctx.fillStyle = '#FFFFFF';
-            ctx.beginPath();
-            ctx.ellipse(-eyeSpacing, eyeY, eyeSize, eyeSize * 0.7, 0, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.strokeStyle = '#333333';
-            ctx.lineWidth = 2;
-            ctx.stroke();
-            
-            if (leftScale > 0.3) {
-                ctx.fillStyle = '#333333';
-                ctx.beginPath();
-                ctx.arc(-eyeSpacing, eyeY, eyeSize * 0.5, 0, Math.PI * 2);
-                ctx.fill();
+            if (leftScale === rightScale) {
+                ctx.save();
+                ctx.scale(leftScale, leftScale);
+                components.eyes.draw(ctx, 0, 0, size);
+                ctx.restore();
+            } else {
+                const eyeSpacing = size * 0.25;
+                
+                ctx.save();
+                ctx.translate(-eyeSpacing, 0);
+                ctx.scale(leftScale, leftScale);
+                ctx.translate(eyeSpacing, 0);
+                components.eyes.draw(ctx, 0, 0, size);
+                ctx.restore();
+                
+                ctx.save();
+                ctx.translate(eyeSpacing, 0);
+                ctx.scale(rightScale, rightScale);
+                ctx.translate(-eyeSpacing, 0);
+                components.eyes.draw(ctx, 0, 0, size);
+                ctx.restore();
             }
-            ctx.restore();
-            
-            ctx.save();
-            ctx.translate(eyeSpacing, eyeY);
-            ctx.scale(rightScale, rightScale);
-            ctx.translate(-eyeSpacing, -eyeY);
-            
-            ctx.fillStyle = '#FFFFFF';
-            ctx.beginPath();
-            ctx.ellipse(eyeSpacing, eyeY, eyeSize, eyeSize * 0.7, 0, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.strokeStyle = '#333333';
-            ctx.lineWidth = 2;
-            ctx.stroke();
-            
-            if (rightScale > 0.3) {
-                ctx.fillStyle = '#333333';
-                ctx.beginPath();
-                ctx.arc(eyeSpacing, eyeY, eyeSize * 0.5, 0, Math.PI * 2);
-                ctx.fill();
-            }
-            ctx.restore();
         } else {
+            ctx.save();
             ctx.scale(eyeScale, eyeScale);
             components.eyes.draw(ctx, 0, 0, size);
+            ctx.restore();
         }
-        ctx.restore();
         
         if (frameData.showStars) {
             const starProgress = frameData.starProgress || 0;
@@ -269,6 +254,10 @@ function renderAnimationFrame(ctx, frameData, components, size, centerX, centerY
         }
     }
     
+    if (hasEyeTransform) {
+        ctx.restore();
+    }
+    
     if (components.nose) {
         components.nose.draw(ctx, 0, 0, size);
     }
@@ -285,7 +274,10 @@ function renderAnimationFrame(ctx, frameData, components, size, centerX, centerY
     }
     
     if (components.glasses) {
+        ctx.save();
+        ctx.scale(eyeScale, eyeScale);
         components.glasses.draw(ctx, 0, 0, size);
+        ctx.restore();
     }
     
     if (components.accessories) {
