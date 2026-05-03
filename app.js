@@ -276,6 +276,7 @@ class GifEmojiApp {
         this.previewCtx.fillRect(0, 0, size, size);
         
         const frameData = {
+            emotion: this.currentEmotion,
             offsetY: 0,
             offsetX: 0,
             scale: 1,
@@ -436,13 +437,24 @@ class GifEmojiApp {
             
             const frameDuration = Math.max(50, this.animationSpeed);
             
-            const gif = new GIF({
-                workers: 2,
-                quality: 10,
-                width: 256,
-                height: 256,
-                workerScript: 'https://cdn.jsdelivr.net/npm/gif.js@0.2.0/dist/gif.worker.js'
-            });
+            let gif;
+            try {
+                gif = new GIF({
+                    workers: 2,
+                    quality: 10,
+                    width: 256,
+                    height: 256,
+                    workerScript: 'https://cdn.jsdelivr.net/npm/gif.js@0.2.0/dist/gif.worker.js'
+                });
+            } catch (e) {
+                console.warn('使用CDN worker失败，尝试单线程模式:', e);
+                gif = new GIF({
+                    workers: 0,
+                    quality: 10,
+                    width: 256,
+                    height: 256
+                });
+            }
             
             const size = 256;
             const centerX = size / 2;
@@ -474,8 +486,11 @@ class GifEmojiApp {
                     progressBar.style.width = `${progress}%`;
                 }
                 
-                await new Promise(resolve => setTimeout(resolve, 50));
+                await new Promise(resolve => setTimeout(resolve, 30));
             }
+            
+            let renderFinished = false;
+            let renderError = null;
             
             gif.on('progress', (p) => {
                 if (progressBar) {
@@ -485,6 +500,8 @@ class GifEmojiApp {
             });
             
             gif.on('finished', (blob) => {
+                renderFinished = true;
+                
                 const url = URL.createObjectURL(blob);
                 
                 const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
@@ -511,11 +528,23 @@ class GifEmojiApp {
                 }
             });
             
-            gif.render();
+            gif.on('abort', () => {
+                renderError = new Error('GIF渲染被中止');
+            });
+            
+            try {
+                gif.render();
+            } catch (e) {
+                renderError = e;
+            }
+            
+            if (renderError) {
+                throw renderError;
+            }
             
         } catch (error) {
             console.error('GIF生成错误:', error);
-            alert('GIF生成失败，请重试');
+            alert('GIF生成失败: ' + (error.message || '未知错误') + '\n请重试或刷新页面');
             
             if (progressContainer) {
                 progressContainer.classList.add('hidden');

@@ -88,21 +88,27 @@ const Components = {
             }
         },
         {
-            id: 'diamond',
-            name: '菱形脸',
-            color: '#FFF0D5',
+            id: 'long',
+            name: '长脸',
+            color: '#FFE8D0',
             draw: (ctx, x, y, size) => {
-                ctx.fillStyle = '#FFF0D5';
+                ctx.fillStyle = '#FFE8D0';
                 ctx.beginPath();
-                const halfW = size * 0.35;
-                const halfH = size * 0.45;
-                ctx.moveTo(x, y - halfH);
-                ctx.lineTo(x + halfW, y);
-                ctx.lineTo(x, y + halfH);
-                ctx.lineTo(x - halfW, y);
+                const halfW = size * 0.3;
+                const halfH = size * 0.5;
+                const radius = size * 0.15;
+                
+                ctx.moveTo(x - halfW, y - halfH + radius);
+                ctx.quadraticCurveTo(x - halfW, y - halfH, x - halfW + radius, y - halfH);
+                ctx.lineTo(x + halfW - radius, y - halfH);
+                ctx.quadraticCurveTo(x + halfW, y - halfH, x + halfW, y - halfH + radius);
+                ctx.lineTo(x + halfW, y + halfH - radius);
+                ctx.quadraticCurveTo(x + halfW, y + halfH, x + halfW - radius, y + halfH);
+                ctx.lineTo(x - halfW + radius, y + halfH);
+                ctx.quadraticCurveTo(x - halfW, y + halfH, x - halfW, y + halfH - radius);
                 ctx.closePath();
                 ctx.fill();
-                ctx.strokeStyle = '#E6E5C0';
+                ctx.strokeStyle = '#E6D0B5';
                 ctx.lineWidth = 2;
                 ctx.stroke();
             }
@@ -348,109 +354,116 @@ const Components = {
         }
     ],
 
-    // 嘴巴选项
+    // 嘴巴选项（基础形状，不带情绪）
     mouths: [
         {
-            id: 'straight',
-            name: '直线嘴',
-            draw: (ctx, x, y, size, emotion = 'neutral') => {
-                ctx.strokeStyle = '#333333';
+            id: 'standard',
+            name: '标准唇',
+            draw: (ctx, x, y, size) => {
+                ctx.strokeStyle = '#DC143C';
                 ctx.lineWidth = 2;
                 ctx.lineCap = 'round';
                 
-                const mouthWidth = size * 0.15;
+                const mouthWidth = size * 0.12;
+                const mouthY = y + size * 0.15;
+                
+                ctx.beginPath();
+                ctx.arc(x, mouthY, mouthWidth, 0.15 * Math.PI, 0.85 * Math.PI);
+                ctx.stroke();
+                
+                ctx.beginPath();
+                ctx.arc(x, mouthY + size * 0.02, mouthWidth * 0.9, 1.15 * Math.PI, 1.85 * Math.PI);
+                ctx.stroke();
+            }
+        },
+        {
+            id: 'thin',
+            name: '薄唇',
+            draw: (ctx, x, y, size) => {
+                ctx.strokeStyle = '#DC143C';
+                ctx.lineWidth = 1.5;
+                ctx.lineCap = 'round';
+                
+                const mouthWidth = size * 0.14;
                 const mouthY = y + size * 0.15;
                 
                 ctx.beginPath();
                 ctx.moveTo(x - mouthWidth, mouthY);
-                ctx.lineTo(x + mouthWidth, mouthY);
+                ctx.quadraticCurveTo(x, mouthY + size * 0.02, x + mouthWidth, mouthY);
+                ctx.stroke();
+                
+                ctx.beginPath();
+                ctx.moveTo(x - mouthWidth * 0.8, mouthY + size * 0.03);
+                ctx.quadraticCurveTo(x, mouthY + size * 0.06, x + mouthWidth * 0.8, mouthY + size * 0.03);
                 ctx.stroke();
             }
         },
         {
-            id: 'smile',
-            name: '微笑嘴',
-            draw: (ctx, x, y, size, emotion = 'neutral') => {
-                ctx.strokeStyle = '#FF69B4';
-                ctx.lineWidth = 2.5;
-                ctx.lineCap = 'round';
-                
-                const mouthWidth = size * 0.18;
-                const mouthY = y + size * 0.12;
-                
-                ctx.beginPath();
-                ctx.arc(x, mouthY, mouthWidth, 0, Math.PI);
-                ctx.stroke();
-            }
-        },
-        {
-            id: 'bigSmile',
-            name: '大笑嘴',
-            draw: (ctx, x, y, size, emotion = 'neutral') => {
-                ctx.fillStyle = '#FFE4E1';
-                const mouthWidth = size * 0.2;
-                const mouthY = y + size * 0.12;
-                
-                ctx.beginPath();
-                ctx.arc(x, mouthY, mouthWidth, 0, Math.PI);
-                ctx.fill();
-                
-                ctx.fillStyle = '#FFFFFF';
-                ctx.beginPath();
-                ctx.arc(x, mouthY, mouthWidth * 0.9, 0, Math.PI);
-                ctx.fill();
-                
-                ctx.fillStyle = '#FF69B4';
-                ctx.beginPath();
-                ctx.moveTo(x - mouthWidth, mouthY);
-                ctx.quadraticCurveTo(x, mouthY + size * 0.12, x + mouthWidth, mouthY);
-                ctx.lineTo(x + mouthWidth, mouthY + size * 0.08);
-                ctx.quadraticCurveTo(x, mouthY + size * 0.18, x - mouthWidth, mouthY + size * 0.08);
-                ctx.closePath();
-                ctx.fill();
-            }
-        },
-        {
-            id: 'pout',
-            name: '噘嘴',
-            draw: (ctx, x, y, size, emotion = 'neutral') => {
+            id: 'thick',
+            name: '厚唇',
+            draw: (ctx, x, y, size) => {
                 ctx.fillStyle = '#FF69B4';
                 
+                const mouthWidth = size * 0.13;
+                const mouthY = y + size * 0.14;
+                
                 ctx.beginPath();
-                ctx.ellipse(x - size * 0.04, y + size * 0.15, size * 0.06, size * 0.04, -0.3, 0, Math.PI * 2);
-                ctx.ellipse(x + size * 0.04, y + size * 0.15, size * 0.06, size * 0.04, 0.3, 0, Math.PI * 2);
+                ctx.ellipse(x, mouthY, mouthWidth, size * 0.04, 0, 0, Math.PI * 2);
+                ctx.fill();
+                
+                ctx.beginPath();
+                ctx.ellipse(x, mouthY + size * 0.05, mouthWidth * 0.9, size * 0.05, 0, 0, Math.PI * 2);
                 ctx.fill();
                 
                 ctx.strokeStyle = '#DC143C';
                 ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(x - mouthWidth, mouthY);
+                ctx.quadraticCurveTo(x, mouthY + size * 0.01, x + mouthWidth, mouthY);
                 ctx.stroke();
             }
         },
         {
-            id: 'open',
-            name: '张嘴',
-            draw: (ctx, x, y, size, emotion = 'neutral') => {
-                ctx.fillStyle = '#333333';
-                const mouthWidth = size * 0.1;
-                const mouthHeight = size * 0.12;
+            id: 'small',
+            name: '小嘴唇',
+            draw: (ctx, x, y, size) => {
+                ctx.strokeStyle = '#DC143C';
+                ctx.lineWidth = 2;
+                ctx.lineCap = 'round';
+                
+                const mouthWidth = size * 0.08;
+                const mouthY = y + size * 0.16;
                 
                 ctx.beginPath();
-                ctx.ellipse(x, y + size * 0.15, mouthWidth, mouthHeight, 0, 0, Math.PI * 2);
-                ctx.fill();
+                ctx.arc(x, mouthY, mouthWidth, 0.2 * Math.PI, 0.8 * Math.PI);
+                ctx.stroke();
                 
-                ctx.fillStyle = '#FFFFFF';
                 ctx.beginPath();
-                ctx.rect(x - size * 0.07, y + size * 0.08, size * 0.14, size * 0.04);
-                ctx.fill();
+                ctx.arc(x, mouthY + size * 0.02, mouthWidth * 0.85, 1.2 * Math.PI, 1.8 * Math.PI);
+                ctx.stroke();
+            }
+        },
+        {
+            id: 'wide',
+            name: '宽嘴唇',
+            draw: (ctx, x, y, size) => {
+                ctx.strokeStyle = '#DC143C';
+                ctx.lineWidth = 2;
+                ctx.lineCap = 'round';
                 
-                ctx.fillStyle = '#FF69B4';
+                const mouthWidth = size * 0.18;
+                const mouthY = y + size * 0.15;
+                
                 ctx.beginPath();
-                ctx.moveTo(x - size * 0.06, y + size * 0.18);
-                ctx.quadraticCurveTo(x, y + size * 0.25, x + size * 0.06, y + size * 0.18);
-                ctx.lineTo(x + size * 0.06, y + size * 0.2);
-                ctx.quadraticCurveTo(x, y + size * 0.27, x - size * 0.06, y + size * 0.2);
-                ctx.closePath();
-                ctx.fill();
+                ctx.moveTo(x - mouthWidth, mouthY);
+                ctx.quadraticCurveTo(x - mouthWidth * 0.5, mouthY + size * 0.03, x, mouthY + size * 0.02);
+                ctx.quadraticCurveTo(x + mouthWidth * 0.5, mouthY + size * 0.03, x + mouthWidth, mouthY);
+                ctx.stroke();
+                
+                ctx.beginPath();
+                ctx.moveTo(x - mouthWidth * 0.85, mouthY + size * 0.03);
+                ctx.quadraticCurveTo(x, mouthY + size * 0.08, x + mouthWidth * 0.85, mouthY + size * 0.03);
+                ctx.stroke();
             }
         }
     ],
