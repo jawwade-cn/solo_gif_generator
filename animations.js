@@ -2,10 +2,12 @@
 const EmotionAnimations = {
     neutral: {
         name: '普通',
+        emotion: 'neutral',
         duration: 1000,
         frames: 10,
         getFrame: (frame, totalFrames, components, size) => {
             return {
+                emotion: 'neutral',
                 offsetY: 0,
                 offsetX: 0,
                 scale: 1,
@@ -19,6 +21,7 @@ const EmotionAnimations = {
     
     happy: {
         name: '微笑',
+        emotion: 'happy',
         duration: 800,
         frames: 12,
         getFrame: (frame, totalFrames, components, size) => {
@@ -26,6 +29,7 @@ const EmotionAnimations = {
             const bounce = Math.sin(progress * Math.PI * 2) * 0.05;
             
             return {
+                emotion: 'happy',
                 offsetY: -bounce * size,
                 offsetX: 0,
                 scale: 1 + bounce * 0.3,
@@ -39,6 +43,7 @@ const EmotionAnimations = {
     
     angry: {
         name: '生气',
+        emotion: 'angry',
         duration: 600,
         frames: 10,
         getFrame: (frame, totalFrames, components, size) => {
@@ -46,6 +51,7 @@ const EmotionAnimations = {
             const shake = Math.sin(progress * Math.PI * 4) * 0.03;
             
             return {
+                emotion: 'angry',
                 offsetY: 0,
                 offsetX: shake * size,
                 scale: 1,
@@ -59,6 +65,7 @@ const EmotionAnimations = {
     
     sad: {
         name: '悲伤',
+        emotion: 'sad',
         duration: 1500,
         frames: 20,
         getFrame: (frame, totalFrames, components, size) => {
@@ -67,6 +74,7 @@ const EmotionAnimations = {
             const slowBounce = Math.sin(progress * Math.PI) * 0.03;
             
             return {
+                emotion: 'sad',
                 offsetY: slowBounce * size,
                 offsetX: 0,
                 scale: 1 - slowBounce * 0.2,
@@ -81,6 +89,7 @@ const EmotionAnimations = {
     
     stars: {
         name: '星星眼',
+        emotion: 'stars',
         duration: 1200,
         frames: 16,
         getFrame: (frame, totalFrames, components, size) => {
@@ -89,6 +98,7 @@ const EmotionAnimations = {
             const bounce = Math.sin(progress * Math.PI * 2) * 0.04;
             
             return {
+                emotion: 'stars',
                 offsetY: -bounce * size,
                 offsetX: 0,
                 scale: 1 + bounce * 0.2,
@@ -103,6 +113,7 @@ const EmotionAnimations = {
     
     wink: {
         name: '眨眼',
+        emotion: 'wink',
         duration: 1000,
         frames: 15,
         getFrame: (frame, totalFrames, components, size) => {
@@ -111,6 +122,7 @@ const EmotionAnimations = {
             const bounce = Math.sin(progress * Math.PI * 2) * 0.03;
             
             return {
+                emotion: 'wink',
                 offsetY: -bounce * size,
                 offsetX: 0,
                 scale: 1 + bounce * 0.1,
@@ -126,6 +138,7 @@ const EmotionAnimations = {
     
     laugh: {
         name: '大笑',
+        emotion: 'laugh',
         duration: 700,
         frames: 12,
         getFrame: (frame, totalFrames, components, size) => {
@@ -134,6 +147,7 @@ const EmotionAnimations = {
             const eyeSquint = 0.7 + Math.sin(progress * Math.PI * 2) * 0.2;
             
             return {
+                emotion: 'laugh',
                 offsetY: -laughBounce * size,
                 offsetX: 0,
                 scale: 1 + laughBounce * 0.3,
@@ -147,6 +161,7 @@ const EmotionAnimations = {
     
     shock: {
         name: '惊讶',
+        emotion: 'shock',
         duration: 1000,
         frames: 15,
         getFrame: (frame, totalFrames, components, size) => {
@@ -155,6 +170,7 @@ const EmotionAnimations = {
             const bounce = Math.sin(progress * Math.PI) * 0.03;
             
             return {
+                emotion: 'shock',
                 offsetY: -bounce * size,
                 offsetX: 0,
                 scale: 1 + bounce * 0.2,
@@ -185,14 +201,18 @@ function renderAnimationFrame(ctx, frameData, components, size, centerX, centerY
         if (frameData.leftEyeScale !== undefined || frameData.rightEyeScale !== undefined) {
             const leftScale = frameData.leftEyeScale || eyeScale;
             const rightScale = frameData.rightEyeScale || eyeScale;
-            
             const eyeSpacing = size * 0.25;
             const eyeY = -size * 0.1;
             const eyeSize = size * 0.08;
             
+            ctx.save();
+            ctx.translate(-eyeSpacing, eyeY);
+            ctx.scale(leftScale, leftScale);
+            ctx.translate(eyeSpacing, -eyeY);
+            
             ctx.fillStyle = '#FFFFFF';
             ctx.beginPath();
-            ctx.ellipse(-eyeSpacing, eyeY, eyeSize * leftScale, (eyeSize * 0.7) * leftScale, 0, 0, Math.PI * 2);
+            ctx.ellipse(-eyeSpacing, eyeY, eyeSize, eyeSize * 0.7, 0, 0, Math.PI * 2);
             ctx.fill();
             ctx.strokeStyle = '#333333';
             ctx.lineWidth = 2;
@@ -201,13 +221,19 @@ function renderAnimationFrame(ctx, frameData, components, size, centerX, centerY
             if (leftScale > 0.3) {
                 ctx.fillStyle = '#333333';
                 ctx.beginPath();
-                ctx.arc(-eyeSpacing, eyeY, (eyeSize * 0.5) * leftScale, 0, Math.PI * 2);
+                ctx.arc(-eyeSpacing, eyeY, eyeSize * 0.5, 0, Math.PI * 2);
                 ctx.fill();
             }
+            ctx.restore();
+            
+            ctx.save();
+            ctx.translate(eyeSpacing, eyeY);
+            ctx.scale(rightScale, rightScale);
+            ctx.translate(-eyeSpacing, -eyeY);
             
             ctx.fillStyle = '#FFFFFF';
             ctx.beginPath();
-            ctx.ellipse(eyeSpacing, eyeY, eyeSize * rightScale, (eyeSize * 0.7) * rightScale, 0, 0, Math.PI * 2);
+            ctx.ellipse(eyeSpacing, eyeY, eyeSize, eyeSize * 0.7, 0, 0, Math.PI * 2);
             ctx.fill();
             ctx.strokeStyle = '#333333';
             ctx.lineWidth = 2;
@@ -216,9 +242,10 @@ function renderAnimationFrame(ctx, frameData, components, size, centerX, centerY
             if (rightScale > 0.3) {
                 ctx.fillStyle = '#333333';
                 ctx.beginPath();
-                ctx.arc(eyeSpacing, eyeY, (eyeSize * 0.5) * rightScale, 0, Math.PI * 2);
+                ctx.arc(eyeSpacing, eyeY, eyeSize * 0.5, 0, Math.PI * 2);
                 ctx.fill();
             }
+            ctx.restore();
         } else {
             ctx.scale(eyeScale, eyeScale);
             components.eyes.draw(ctx, 0, 0, size);
@@ -250,7 +277,10 @@ function renderAnimationFrame(ctx, frameData, components, size, centerX, centerY
         ctx.save();
         const mouthScale = frameData.mouthScale || 1;
         ctx.scale(mouthScale, mouthScale);
-        components.mouth.draw(ctx, 0, 0, size);
+        
+        const currentEmotion = frameData.emotion || 'neutral';
+        drawMouthWithEmotion(ctx, 0, 0, size, components.mouth, currentEmotion);
+        
         ctx.restore();
     }
     
@@ -301,6 +331,107 @@ function drawStar(ctx, cx, cy, spikes, outerRadius, innerRadius) {
     ctx.lineTo(cx, cy - outerRadius);
     ctx.closePath();
     ctx.fill();
+}
+
+// 根据情绪绘制嘴巴
+function drawMouthWithEmotion(ctx, x, y, size, baseMouth, emotion) {
+    const mouthY = y + size * 0.15;
+    const baseWidth = size * 0.12;
+    
+    ctx.save();
+    
+    switch(emotion) {
+        case 'happy':
+            ctx.strokeStyle = '#DC143C';
+            ctx.lineWidth = 2.5;
+            ctx.lineCap = 'round';
+            ctx.beginPath();
+            ctx.arc(x, mouthY, baseWidth * 1.3, 0.1 * Math.PI, 0.9 * Math.PI);
+            ctx.stroke();
+            break;
+            
+        case 'angry':
+            ctx.strokeStyle = '#DC143C';
+            ctx.lineWidth = 2.5;
+            ctx.lineCap = 'round';
+            ctx.beginPath();
+            ctx.arc(x, mouthY + size * 0.05, baseWidth * 1.1, 1.1 * Math.PI, 1.9 * Math.PI);
+            ctx.stroke();
+            ctx.fillStyle = '#333333';
+            ctx.beginPath();
+            ctx.moveTo(x - baseWidth * 0.8, mouthY - size * 0.02);
+            ctx.lineTo(x - baseWidth * 0.4, mouthY);
+            ctx.lineTo(x - baseWidth * 0.8, mouthY + size * 0.02);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.moveTo(x + baseWidth * 0.8, mouthY - size * 0.02);
+            ctx.lineTo(x + baseWidth * 0.4, mouthY);
+            ctx.lineTo(x + baseWidth * 0.8, mouthY + size * 0.02);
+            ctx.fill();
+            break;
+            
+        case 'sad':
+            ctx.strokeStyle = '#DC143C';
+            ctx.lineWidth = 2;
+            ctx.lineCap = 'round';
+            ctx.beginPath();
+            ctx.arc(x, mouthY + size * 0.03, baseWidth * 0.9, 1.15 * Math.PI, 1.85 * Math.PI);
+            ctx.stroke();
+            break;
+            
+        case 'stars':
+            ctx.strokeStyle = '#DC143C';
+            ctx.lineWidth = 2.5;
+            ctx.lineCap = 'round';
+            ctx.beginPath();
+            ctx.arc(x, mouthY, baseWidth * 1.2, 0.15 * Math.PI, 0.85 * Math.PI);
+            ctx.stroke();
+            break;
+            
+        case 'wink':
+            ctx.strokeStyle = '#DC143C';
+            ctx.lineWidth = 2;
+            ctx.lineCap = 'round';
+            ctx.beginPath();
+            ctx.arc(x, mouthY, baseWidth * 1.1, 0.2 * Math.PI, 0.8 * Math.PI);
+            ctx.stroke();
+            break;
+            
+        case 'laugh':
+            ctx.fillStyle = '#333333';
+            ctx.beginPath();
+            ctx.ellipse(x, mouthY + size * 0.02, baseWidth * 1.2, size * 0.08, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = '#FFFFFF';
+            ctx.beginPath();
+            ctx.rect(x - baseWidth * 0.9, mouthY - size * 0.02, baseWidth * 1.8, size * 0.04);
+            ctx.fill();
+            ctx.strokeStyle = '#DC143C';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(x, mouthY + size * 0.04, baseWidth * 1.1, 0, Math.PI);
+            ctx.stroke();
+            break;
+            
+        case 'shock':
+            ctx.fillStyle = '#333333';
+            ctx.beginPath();
+            ctx.ellipse(x, mouthY + size * 0.02, baseWidth * 0.8, size * 0.1, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = '#DC143C';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.ellipse(x, mouthY + size * 0.02, baseWidth * 0.8, size * 0.1, 0, 0, Math.PI * 2);
+            ctx.stroke();
+            break;
+            
+        case 'neutral':
+        default:
+            baseMouth.draw(ctx, x, y, size);
+            break;
+    }
+    
+    ctx.restore();
 }
 
 // 获取动画配置
